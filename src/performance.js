@@ -14,6 +14,7 @@ export var performance = {
     }
     if (timers[label]) {
       let dt = process.hrtime(timers[label])
+      delete timers[label]
       timings[label] = (dt[0] * 1e9 + dt[1]) / 1e6
     }
   },
@@ -22,6 +23,9 @@ export var performance = {
   },
   reset: () => {
     timers = {}
+    timings = {}
+  },
+  clearComplete: () => {
     timings = {}
   }
 }

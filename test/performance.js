@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import performance from '..'
+import { performance } from '../src/performance'
 
 describe('performance', () => {
 
@@ -23,6 +23,11 @@ describe('performance', () => {
     expect(performance.timings).to.be.a('function')
   })
 
+  it('should have a clearComplete function', () => {
+    expect(performance).to.have.property('clearComplete')
+    expect(performance.clearComplete).to.be.a('function')
+  })
+
   describe('.reset', () => {
     it('resets the output of timings() to and empty object', () => {
       expect(performance.timings()).to.deep.equal({})
@@ -31,6 +36,29 @@ describe('performance', () => {
       expect(performance.timings().one).to.be.ok
       performance.reset()
       expect(performance.timings()).to.deep.equal({})
+    })
+  })
+
+  describe('.clearComplete', () => {
+    it('removes timers that have ended resulting in empty result from the timings function', () => {
+      performance.time('one')
+      performance.time('two')
+      performance.timeEnd('one')
+      expect(performance.timings().one).to.be.ok
+      performance.clearComplete()
+      expect(performance.timings()).to.deep.equal({})
+      performance.timeEnd('two')
+      expect(performance.timings().two).to.be.ok
+    })
+
+    it('ending a completed and cleared timer should not add it again to the result', () => {
+      performance.time('one')
+      performance.timeEnd('one')
+      expect(performance.timings().one).to.be.ok
+      performance.clearComplete()
+      expect(performance.timings()).to.deep.equal({})
+      performance.timeEnd('one')
+      expect(performance.timings().one).to.not.be.ok
     })
   })
 
@@ -44,7 +72,7 @@ describe('performance', () => {
       expect(performance.timings()).to.deep.equal({})
     })
 
-    it('returns an empty object when no timers have been ended', () => {
+    it('returns an empty object when no timers have ended', () => {
       performance.time('one')
       expect(performance.timings()).to.deep.equal({})
     })
