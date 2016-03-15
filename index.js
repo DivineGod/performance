@@ -1,1 +1,1 @@
-module.exports = require('./src/performance.js').performance
+module.exports = require('./lib/performance').performance
