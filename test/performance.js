@@ -70,7 +70,7 @@ describe('performance', () => {
         performance.timeEnd('five')
         expect(performance.timings().five).to.be.above(2.0)
         done()
-      }, 2)
+      }, 3)
     })
 
     it('calling .timeEnd multiple times before should not update the result', () => {
